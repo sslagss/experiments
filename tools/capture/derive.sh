@@ -12,7 +12,6 @@ poster_at() {
     dayz-field-card) echo 2.0 ;;   # marker mid-route
     synthlab)        echo 7.4 ;;   # fat waveform, chord held
     vector-wars)     echo 2.6 ;;   # boss shattering
-    track-companion) echo 3.5 ;;   # Lesmo 1 current, S2 filling
     typelab)         echo 2.7 ;;   # EXPERIMENT melting
     solscape)        echo 6.6 ;;   # Saturn's rings
     scoville)        echo 2.8 ;;   # the giants
