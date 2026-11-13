@@ -5,7 +5,7 @@
       "name": "static-site",
       "runtimeExecutable": "python3",
       "runtimeArgs": [
-        "/private/tmp/claude-501/-Users-scottslagsvol-Documents-GitHub-experiments/00266a17-c150-4df7-9ce9-91de8725cf1f/scratchpad/serve.py"
+        "/private/tmp/claude-501/-Users-scottslagsvol--claude-spares-spare-2LSOzF/ff839e32-f31d-401b-91be-739dfc018aaa/scratchpad/serve.py"
       ],
       "port": 8743
     },
