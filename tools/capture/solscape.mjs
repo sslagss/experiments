@@ -1,3 +1,5 @@
+import { virtualTime, injectCss } from './virtual-time.mjs';
+
 // Solscape capture scenario. Solscape has no step hook, but its loop runs off
 // requestAnimationFrame's timestamp, so we swap in a fake rAF and feed it
 // virtual time: each step() runs every queued callback with now += 1/30 s.
@@ -16,24 +18,8 @@ export const url = 'solscape/index.html';
 export const width = 1200;
 export const height = 480;
 
-export const init = `
-  (() => {
-    let q = [], id = 0, now = null;
-    window.requestAnimationFrame = (cb) => { q.push([++id, cb]); return id; };
-    window.cancelAnimationFrame = (h) => { q = q.filter(([i]) => i !== h); };
-    if (${JSON.stringify(process.env.HIDE_UI || '')}) addEventListener('DOMContentLoaded', () => {
-      const st = document.createElement('style');
-      st.textContent = '[data-screen-label] > :not(:first-child) { display: none !important; }';
-      document.head.appendChild(st);
-    });
-    window.__tick = (ms) => {
-      if (now === null) now = performance.now();
-      now += ms;
-      const run = q; q = [];
-      for (const [, cb] of run) cb(now);
-    };
-  })();
-`;
+// HIDE_UI: everything in the app shell but its first child (the 3D viewport, with its labels).
+export const init = virtualTime + injectCss(process.env.HIDE_UI ? '[data-screen-label] > :not(:first-child) { display: none !important; }' : '');
 
 // Keep ticking while the textures load; ready once the loading overlay is gone.
 export const ready = `(__tick(33), !!window.__solsim && !/ASSEMBLING|INITIALIZING/.test(document.body.innerText))`;

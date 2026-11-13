@@ -10,10 +10,10 @@ so adding a file is all it takes to replace a placeholder.
 | Synthlab | `synthlab.mp4` |
 | Vector Wars | `vector-wars.mp4` (done: level 2 mini-boss kill) |
 | Track Companion | `track-companion.mp4` |
-| Type Lab | `typelab.mp4` |
+| Type Lab | `typelab.mp4` (done: Thermal sweep through EXPERIMENT, then it heals) |
 | Solscape | `solscape.mp4` (done: fly to Saturn, UI hidden) |
-| Scoville | `scoville.mp4` |
-| Meridian GP | `meridian-gp.mp4` |
+| Scoville | `scoville.mp4` (done: Galaxy view, Orbits → Giants → Orbits) |
+| Meridian GP | `meridian-gp.mp4` (done: The Move, Follow cam, panels hidden) |
 
 Target: 5:2 (1200×480), 30 fps, about 5 s, H.264 around 1.6 Mbps (≈1 MB).
 
@@ -30,9 +30,12 @@ to advance the prototype by hand:
 - **A step hook**, if the prototype has one. Vector Wars: `?debug` →
   `window.vectorWars.step()` (`vector-wars.mjs`).
 - **Virtual time**, for anything animated purely by `requestAnimationFrame`.
-  The scenario swaps in a fake rAF and runs the queued callbacks with the
-  clock advanced 1/30 s per step (`solscape.mjs`; copy its `init` for other
-  canvas prototypes). Timers and CSS transitions still run in real time.
+  `virtual-time.mjs` swaps in a fake rAF (and `performance.now()`) and runs
+  the queued callbacks with the clock advanced 1/30 s per step. `page.mjs`
+  applies it to any page, driven by env vars; `solscape.mjs` and
+  `typelab.mjs` add page-specific cues. Timers and CSS transitions still run
+  in real time. It also works on the self-unpacking bundles (Scoville, MGP),
+  since the window survives their document swap.
 
 ## Walkthrough (Vector Wars)
 
@@ -84,6 +87,37 @@ to advance the prototype by hand:
   `HIDE_UI=1` drops the overlays. The homepage clip:
   `HIDE_UI=1 CUES="1:saturn" node tools/capture/cdp.mjs tools/capture/solscape.mjs --mode take --from 0 --to 13 --out /tmp/sol-take`,
   then `tools/capture/cut.sh /tmp/sol-take 40 290 previews/solscape.mp4 1600000 20`.
+- `typelab.mjs`: Type Lab. `PLAN` picks modes (keys 1-7) and drags a stroke
+  through the word. The homepage clip:
+  `PLAN="0.1:mode4,1:stir2" node tools/capture/cdp.mjs tools/capture/typelab.mjs --mode take --from 0 --to 10 --out /tmp/tl-take`,
+  then `tools/capture/cut.sh /tmp/tl-take 20 235 previews/typelab.mp4 1600000 15`.
+  Switching mode also picks a random word; this take came up EXPERIMENT.
+- `page.mjs` + `virtual-time.mjs`: any rAF page. `PAGE`, `READY`, `CUES`
+  (`"<s>:<js>;;<s>:<js>"`), `CSS`, `CLEAR_STORAGE=1`. See below for Scoville and MGP.
+
+### Scoville and Meridian GP (generic `page.mjs`)
+
+```bash
+click() { echo "[...document.querySelectorAll('button')].find(b => b.textContent.trim() === '$1').click()"; }
+```
+
+Scoville (the card links to the Index view; the clip is the Galaxy view it opens):
+
+```bash
+PAGE="Scoville Galaxy (Standalone).html" READY="!!document.querySelector('canvas') && (window.__capWait = (window.__capWait || 0) + 1) > 30" CUES="0.2:$(click Orbits);;3:$(click Giants);;6:$(click Orbits)" node tools/capture/cdp.mjs tools/capture/page.mjs --mode take --from 0 --to 9 --out /tmp/scg-take
+tools/capture/cut.sh /tmp/scg-take 45 255 previews/scoville.mp4 1600000 20
+```
+
+Meridian GP. It remembers its camera in localStorage, so clear it and pick
+Follow explicitly. Hide the panels after the chapter starts (hiding `#intro`
+from load stops playback starting):
+
+```bash
+HIDE="document.head.appendChild(Object.assign(document.createElement('style'), { textContent: '#topbar, #leaderboard, #driver-card, #transport, #intro { visibility: hidden !important; }' }))"
+CLEAR_STORAGE=1 PAGE="MGP-recap.html" READY="!!window.MGP && (window.__capWait = (window.__capWait || 0) + 1) > 30" CUES="0.2:$(click 'PLAY RECAP');;1:$(click 'THE MOVE');;1.1:$(click FOLLOW);;3:$HIDE" node tools/capture/cdp.mjs tools/capture/page.mjs --mode take --from 0 --to 17 --out /tmp/mgp-take
+tools/capture/cut.sh /tmp/mgp-take 95 300 previews/meridian-gp.mp4 1600000 20
+```
+
 - `cut.sh` → `encode.swift`: frames to a looping H.264 mp4 with an end-to-start crossfade.
 - `montage.swift`: contact sheet of stills.
 - `testclip.swift`: regenerates `previews/placeholder.mp4`.
