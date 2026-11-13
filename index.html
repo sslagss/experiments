@@ -304,6 +304,41 @@
             container-type: inline-size;
         }
 
+        /* Previews, lightest first: the SVG vignette (fallback), then a poster still
+           (previews/<slug>.jpg, -sm.jpg for small cards), then the looping clip
+           (previews/<slug>.mp4, -sm.mp4 for small cards or 3G), which fades in once it
+           plays. Data saver, 2G and reduced motion stop at the poster. */
+        .vignette-poster,
+        .vignette-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        .vignette-poster {
+            z-index: 4;
+        }
+
+        .vignette-video {
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Once a poster or clip covers the card, take the SVG fallback out of
+           rendering so its animations stop costing anything. */
+        .vignette.covered > :not(.vignette-poster):not(.vignette-video) {
+            display: none;
+        }
+
+        .vignette-video.ready {
+            opacity: 1;
+        }
+
         .vignette svg {
             position: absolute;
             inset: 0;
@@ -608,6 +643,8 @@
         <nav>
             <a href="dayz-field-card/index.html" class="card">
                 <div class="vignette vignette-dayz" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/dayz-field-card-sm.jpg" srcset="previews/dayz-field-card-sm.jpg 720w, previews/dayz-field-card.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="dayz-field-card"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="dz-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
@@ -666,6 +703,8 @@
             </a>
             <a href="synthlab/index.html" class="card">
                 <div class="vignette vignette-synth" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/synthlab-sm.jpg" srcset="previews/synthlab-sm.jpg 720w, previews/synthlab.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="synthlab"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="syn-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
@@ -682,6 +721,8 @@
             </a>
             <a href="Vector%20Wars/index.html" class="card">
                 <div class="vignette vignette-vector" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/vector-wars-sm.jpg" srcset="previews/vector-wars-sm.jpg 720w, previews/vector-wars.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="vector-wars"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="vw-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
@@ -708,6 +749,8 @@
             </a>
             <a href="track-companion/index.html" class="card">
                 <div class="vignette vignette-track" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/track-companion-sm.jpg" srcset="previews/track-companion-sm.jpg 720w, previews/track-companion.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="track-companion"></video>
                     <div class="tc-word">TRACK COMPANION</div>
                     <div class="tc-strip-wrap">
                         <div class="tc-now-line"></div>
@@ -739,6 +782,8 @@
             </a>
             <a href="typelab/typelab.html" class="card">
                 <div class="vignette vignette-typelab" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/typelab-sm.jpg" srcset="previews/typelab-sm.jpg 720w, previews/typelab.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="typelab"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <linearGradient id="tl-text" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -760,6 +805,8 @@
             </a>
             <a href="solscape/index.html" class="card">
                 <div class="vignette vignette-solscape" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/solscape-sm.jpg" srcset="previews/solscape-sm.jpg 720w, previews/solscape.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="solscape"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <radialGradient id="ss-earth" cx="36%" cy="30%" r="75%">
@@ -805,6 +852,8 @@
             </a>
             <a href="Scoville Index (Standalone).html" class="card">
                 <div class="vignette vignette-scoville" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/scoville-sm.jpg" srcset="previews/scoville-sm.jpg 720w, previews/scoville.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="scoville"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <g>
                             <animateTransform attributeName="transform" type="rotate" values="-7 125 52;7 125 52;-7 125 52" dur="26s" repeatCount="indefinite"></animateTransform>
@@ -852,6 +901,8 @@
             </a>
             <a href="MGP-recap.html" class="card">
                 <div class="vignette vignette-mgp" aria-hidden="true">
+                    <img class="vignette-poster" src="previews/meridian-gp-sm.jpg" srcset="previews/meridian-gp-sm.jpg 720w, previews/meridian-gp.jpg 1200w" sizes="(min-width: 1024px) 546px, (min-width: 640px) 340px, calc(100vw - 32px)" loading="lazy" decoding="async" alt="">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1" data-clip="meridian-gp"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <path id="mgp-track" d="M 70 12 L 170 12 A 38 38 0 0 1 170 88 L 70 88 A 38 38 0 0 1 70 12 Z" fill="none" stroke="rgba(232,230,225,0.28)" stroke-width="2"></path>
                         <rect x="116" y="9" width="4" height="6" fill="rgba(232,230,225,0.5)"></rect>
@@ -910,32 +961,89 @@
       (function () {
         var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+        // Connection tiers (Chrome/Android report these; Safari doesn't, so it gets 'normal'):
+        // data saver or 2G stays on the poster stills; 3G gets the small clips.
+        function netTier() {
+          var c = navigator.connection;
+          if (!c) return 'normal';
+          if (c.saveData === true || /^(slow-2g|2g)$/.test(c.effectiveType || '')) return 'stills';
+          return c.effectiveType === '3g' ? 'small' : 'normal';
+        }
+
+        // The 600px clip on slow connections, or unless the card really shows more pixels than that.
+        function clipUrl(video) {
+          var w = video.parentNode.getBoundingClientRect().width;
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          var small = netTier() === 'small' || w * dpr <= 720;
+          return 'previews/' + video.dataset.clip + (small ? '-sm' : '') + '.mp4';
+        }
+
+        function covered(vignette) {
+          vignette.classList.add('covered');
+          var svg = vignette.querySelector('svg');
+          if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+        }
+
+        function setVideoPlaying(vignette, playing) {
+          var video = vignette.querySelector('.vignette-video');
+          if (!video) return;
+          if (playing) {
+            if (netTier() === 'stills') return;
+            if (!video.getAttribute('src')) video.src = clipUrl(video);   // chosen once, on first play
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {}); // autoplay refused: the poster stays
+          } else {
+            video.pause();
+          }
+        }
+
         function setSvgPlaying(vignette, playing) {
+          setVideoPlaying(vignette, playing);
           var svg = vignette.querySelector('svg');
           if (!svg || typeof svg.pauseAnimations !== 'function') return;
-          if (playing) svg.unpauseAnimations(); else svg.pauseAnimations();
+          if (playing && !vignette.classList.contains('covered')) svg.unpauseAnimations(); else svg.pauseAnimations();
         }
+
+        document.querySelectorAll('.vignette-poster').forEach(function (img) {
+          var v = img.parentNode;
+          if (img.complete && img.naturalWidth) covered(v);
+          img.addEventListener('load', function () { covered(v); });
+          img.addEventListener('error', function () { img.remove(); }); // no poster: the SVG carries on
+        });
+
+        document.querySelectorAll('.vignette-video').forEach(function (video) {
+          video.addEventListener('playing', function () { video.classList.add('ready'); covered(video.parentNode); });
+          video.addEventListener('error', function () {
+            // No clip for this card yet: the placeholder, unless a poster is already showing.
+            var hasPoster = !!video.parentNode.querySelector('.vignette-poster');
+            if (!hasPoster && !/placeholder\.mp4$/.test(video.src)) { video.src = 'previews/placeholder.mp4'; video.play().catch(function () {}); }
+          });
+        });
 
         var vignettes = document.querySelectorAll('.vignette');
         vignettes.forEach(function (v) { setSvgPlaying(v, false); });
 
         if (reduceMotion) return; // leave everything paused/static
 
+        // remember on-screen state separately, so a page that loads in a background tab
+        // still starts the cards that are already in view once it becomes visible
+        function sync(v) {
+          var playing = v.inView === true && !document.hidden;
+          v.classList.toggle('animate', playing);
+          setSvgPlaying(v, playing);
+        }
+
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
-            var v = entry.target;
-            var playing = entry.isIntersecting && !document.hidden;
-            v.classList.toggle('animate', playing);
-            setSvgPlaying(v, playing);
+            entry.target.inView = entry.isIntersecting;
+            sync(entry.target);
           });
         }, { threshold: 0.2 });
         vignettes.forEach(function (v) { io.observe(v); });
 
         document.addEventListener('visibilitychange', function () {
           document.body.classList.toggle('page-hidden', document.hidden);
-          vignettes.forEach(function (v) {
-            setSvgPlaying(v, !document.hidden && v.classList.contains('animate'));
-          });
+          vignettes.forEach(sync);
         });
       })();
     </script>
