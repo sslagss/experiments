@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DayZ Field Card</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%23111513%27/%3E%3Cpath d=%27M16 5l4 11-4-2.5-4 2.5z%27 fill=%27%23FF7547%27/%3E%3Cpath d=%27M16 27l4-11-4 2.5-4-2.5z%27 fill=%27%2399A29A%27/%3E%3C/svg%3E">
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WZGPQSX3XJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WZGPQSX3XJ');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout: single mobile column, field-manual cards; road-flare accent on fog grey; risk encoded as moss / amber / red */
+  --bg: #ECEEEA;
+  --surface: #FFFFFF;
+  --ink: #1B201D;
+  --muted: #5F6760;
+  --line: #D6DAD3;
+  --accent: #D94F26;
+  --low: #4E6E48;
+  --mid: #B7800E;
+  --high: #B3261E;
+  --land: #E3E8DC;
+  --sea: #CBD9DE;
+  --chip: #F2F4F0;
+  --town: #8C918D;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111513; --surface: #191F1C; --ink: #E5E9E4; --muted: #99A29A; --line: #2A332E;
+    --accent: #FF7547; --low: #8DB383; --mid: #E2AA3E; --high: #EF5B4C;
+    --land: #1F2A24; --sea: #142028; --chip: #212824; --town: #737A75;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111513; --surface: #191F1C; --ink: #E5E9E4; --muted: #99A29A; --line: #2A332E;
+  --accent: #FF7547; --low: #8DB383; --mid: #E2AA3E; --high: #EF5B4C;
+  --land: #1F2A24; --sea: #142028; --chip: #212824; --town: #737A75;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 15px/1.5 var(--body);
+}
+.wrap { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; display: grid; gap: 14px; }
+
+header { display: grid; gap: 4px; padding: 8px 2px 4px; }
+.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+h1 {
+  margin: 0; font: 700 40px/0.95 var(--display); letter-spacing: 0.01em; text-transform: uppercase;
+  text-wrap: balance;
+}
+h1 span { color: var(--accent); }
+.sub { margin: 0; color: var(--muted); font: 500 12px/1.4 var(--mono); letter-spacing: 0.04em; }
+.toggle {
+  flex: none; font: 600 13px/1 var(--body); color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; cursor: pointer;
+}
+.toggle:hover { border-color: var(--muted); }
+
+.mapLink {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px;
+  background: var(--accent); color: #fff; text-decoration: none;
+}
+.mapLink .ic { width: 36px; height: 36px; flex: none; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,.18); }
+.mapLink .ic svg { width: 20px; height: 20px; }
+.ml-text { flex: 1; display: grid; gap: 1px; }
+.ml-text b { font: 700 21px/1.1 var(--display); text-transform: uppercase; letter-spacing: 0.02em; }
+.ml-text span { font-size: 13px; opacity: .85; }
+.ml-arrow { width: 22px; height: 22px; flex: none; }
+.mapLink:hover { filter: brightness(1.06); }
+.mapLink:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+details {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+}
+summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary .ic {
+  width: 36px; height: 36px; flex: none; border-radius: 10px; display: grid; place-items: center;
+  background: var(--chip); color: var(--accent);
+}
+summary .ic svg { width: 20px; height: 20px; }
+summary h2 { margin: 0; flex: 1; font: 700 21px/1.1 var(--display); text-transform: uppercase; letter-spacing: 0.02em; }
+summary .chev { width: 18px; height: 18px; color: var(--muted); transition: transform .2s ease; }
+details[open] summary .chev { transform: rotate(180deg); }
+summary:focus-visible, .toggle:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.body { padding: 2px 16px 18px; display: grid; gap: 14px; border-top: 1px solid var(--line); padding-top: 14px; }
+
+h3 { margin: 0; font: 700 15px/1.2 var(--display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+
+ol.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: s; }
+ol.steps li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; counter-increment: s; }
+ol.steps li::before {
+  content: counter(s); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ink); color: var(--surface); font: 700 16px/1 var(--display);
+}
+.steps b, .rows b { font-weight: 600; }
+.steps p, .rows p { margin: 0; }
+.muted { color: var(--muted); }
+
+.rows { display: grid; gap: 0; }
+.row { display: grid; grid-template-columns: 112px 1fr; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; padding-top: 0; }
+.row > b { font: 600 14px/1.35 var(--body); }
+
+.risk { display: grid; grid-template-columns: 10px 1fr; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); align-items: start; }
+.risk:first-child { border-top: 0; padding-top: 0; }
+.dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; background: var(--low); }
+.dot.mid { background: var(--mid); }
+.dot.high { background: var(--high); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .dot { margin: 0; }
+
+.nav-vis { display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: center; }
+.nav-vis svg { width: 150px; height: 150px; }
+
+.tabs { display: flex; gap: 6px; background: var(--chip); padding: 4px; border-radius: 999px; }
+.tabs button {
+  flex: 1; border: 0; background: transparent; color: var(--muted); padding: 9px 10px; border-radius: 999px;
+  font: 700 15px/1 var(--display); text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;
+}
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.panel { display: grid; gap: 14px; }
+.panel[hidden] { display: none; }
+.mapbox { background: var(--sea); border-radius: 12px; overflow: hidden; }
+.mapbox svg { display: block; width: 100%; height: auto; }
+.mapnote { font-size: 12px; color: var(--muted); margin: -6px 0 0; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { background: var(--chip); border-radius: 10px; padding: 9px 10px; display: grid; gap: 1px; }
+.stat b { font: 700 22px/1 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12px; color: var(--muted); line-height: 1.3; }
+
+.recipes { display: grid; gap: 8px; }
+.rec { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13.5px; }
+.rec i { font: 500 13px/1 var(--mono); font-style: normal; color: var(--muted); }
+.chip { background: var(--chip); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; line-height: 1.25; }
+.chip.out { background: transparent; border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+.acts { display: grid; gap: 10px; }
+.act { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 6px; }
+.act b { font: 700 17px/1.1 var(--display); text-transform: uppercase; letter-spacing: 0.03em; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 14px; }
+.flow .arr { color: var(--accent); font-weight: 600; }
+.act p { margin: 0; font-size: 13px; color: var(--muted); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font: 700 13px/1.2 var(--display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 0 8px 8px 0; }
+td { border-top: 1px solid var(--line); padding: 9px 8px 9px 0; vertical-align: top; }
+td:first-child { font-weight: 600; }
+
+svg [font-family="IBM Plex Sans"], svg [font-family="IBM Plex Sans"] text { font-family: var(--body); }
+svg [font-family="Barlow Condensed"], svg [font-family="Barlow Condensed"] text { font-family: var(--display); }
+.risk p { margin: 0; }
+.nav-vis .rows { width: 100%; }
+
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 12px; font-weight: 500; }
+
+footer { text-align: center; font: 500 11px/1.4 var(--mono); color: var(--muted); letter-spacing: 0.04em; padding-top: 6px; display: grid; gap: 10px; }
+footer a { color: var(--muted); text-decoration: none; letter-spacing: 0.16em; }
+footer a:hover { color: var(--accent); }
+footer a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+@media (max-width: 420px) {
+  h1 { font-size: 34px; }
+  .row { grid-template-columns: 1fr; gap: 2px; }
+  .nav-vis { grid-template-columns: 1fr; justify-items: center; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+    <symbol id="i-house" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-3.9 0-7-2.7-7-6.5 0-3.5 3-5.5 3-9 2.5 1.5 3.5 3.5 3.5 5.5 1-1 1.5-2.2 1.5-3.5 3 2 5 4.8 5 7.2C18 18.3 15.9 21 12 21z"/></symbol>
+    <symbol id="i-med" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-pad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 4 4v2a3 3 0 0 1-5.4 1.8L15 14H9l-1.6 1.8A3 3 0 0 1 2 14v-2a4 4 0 0 1 4-4z"/><path d="M7 11v3M5.5 12.5h3M16 12h.01M18 13.5h.01"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+  </defs>
+</svg>
+
+<main class="wrap">
+  <header>
+    <div class="top">
+      <h1>DayZ<br><span>Field Card</span></h1>
+      <button class="toggle" id="toggleAll" type="button">Expand all</button>
+    </div>
+    <p class="sub">XBOX SERIES X · UPDATE 1.30 · CHERNARUS / LIVONIA</p>
+  </header>
+
+  <a class="mapLink" href="https://www.izurvive.com/chernarusplus/#c=-36;9;2" target="_blank" rel="noopener">
+    <span class="ic"><svg><use href="#i-map"/></svg></span>
+    <span class="ml-text"><b>Open iZurvive</b><span>Chernarus live map</span></span>
+    <svg class="ml-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+  </a>
+
+  <!-- FIRST HOUR -->
+  <details open>
+    <summary><span class="ic"><svg><use href="#i-flag"/></svg></span><h2>First hour</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <ol class="steps">
+        <li><p><b>Orient.</b> Tracks before the road: south coast. Road before the tracks: east coast.</p></li>
+        <li><p><b>Move.</b> Head north and inland. Skip Chernogorsk, Elektrozavodsk, Berezino.</p></li>
+        <li><p><b>Drink.</b> Fill a bottle at a well pump. Safe every time.</p></li>
+        <li><p><b>Arm.</b> Knife, or two small stones for a stone knife. Then a melee weapon.</p></li>
+        <li><p><b>Carry.</b> Backpack, or burlap sack + rope for a courier bag.</p></li>
+        <li><p><b>Shelter.</b> Before dark: matches, dry clothes, a place for a fire.</p></li>
+      </ol>
+    </div>
+  </details>
+
+  <!-- NAVIGATION -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-compass"/></svg></span><h2>Navigation</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div class="nav-vis">
+        <svg viewBox="0 0 150 150" role="img" aria-label="Compass: sun rises east, sets west, clouds drift west to east, North Star marks north">
+          <circle cx="75" cy="75" r="56" fill="var(--chip)" stroke="var(--line)" stroke-width="1.5"/>
+          <circle cx="75" cy="75" r="40" fill="none" stroke="var(--line)" stroke-dasharray="2 4"/>
+          <path d="M75 27 83 75 75 70 67 75z" fill="var(--accent)"/>
+          <path d="M75 123 83 75 75 80 67 75z" fill="var(--muted)" opacity=".5"/>
+          <text x="75" y="15" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="15" fill="var(--ink)">N ★</text>
+          <text x="75" y="145" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="15" fill="var(--muted)">S</text>
+          <text x="141" y="80" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="15" fill="var(--ink)">E</text>
+          <text x="9" y="80" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="15" fill="var(--ink)">W</text>
+          <circle cx="122" cy="40" r="7" fill="var(--mid)"/>
+          <path d="M118 52h8" stroke="var(--mid)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="28" cy="40" r="7" fill="none" stroke="var(--mid)" stroke-width="2"/>
+          <path d="M24 52h8" stroke="var(--mid)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M40 112h70" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <path d="m104 108 6 4-6 4" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+        </svg>
+        <div class="rows">
+          <div class="row"><b>Sun</b><p>Rises east, sets west.</p></div>
+          <div class="row"><b>Clouds</b><p>Drift west to east.</p></div>
+          <div class="row"><b>Night</b><p>North Star marks north.</p></div>
+        </div>
+      </div>
+      <div class="rows">
+        <div class="row"><b>Tourist map</b><p>Civilian loot. Shows more with a compass or GPS on you.</p></div>
+        <div class="row"><b>Trail boards</b><p>Picnic and trailhead boards show a big map of the area.</p></div>
+        <div class="row"><b>Compass</b><p>The best navigation item for its weight.</p></div>
+        <div class="row"><b>Signs</b><p>Town names at every entrance. Junction signs point toward towns.</p></div>
+        <div class="row"><b>Scale</b><p>Chernarus is about 15 km across. One grid square = 1 km.</p></div>
+        <div class="row"><b>Landmarks</b><p>Radio towers, hilltop castles, church steeples, power lines.</p></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- MAPS -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-map"/></svg></span><h2>Chernarus &amp; Livonia</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tab-ch" aria-controls="p-ch" aria-selected="true" type="button">Chernarus</button>
+        <button role="tab" id="tab-lv" aria-controls="p-lv" aria-selected="false" type="button">Livonia</button>
+      </div>
+
+      <div class="panel" id="p-ch" role="tabpanel" aria-labelledby="tab-ch">
+        <div class="stats">
+          <div class="stat"><b>225 km²</b><span>Original map</span></div>
+          <div class="stat"><b>S + E</b><span>Coast spawns</span></div>
+          <div class="stat"><b>276</b><span>Wolf territories</span></div>
+        </div>
+        <div class="mapbox">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Schematic map of Chernarus with coastline to the south and east, coastal cities, inland towns and military sites">
+            <path d="M0 0H300V30L282 38 272 72 266 108 270 140 262 172 266 206 258 236 238 256 206 262 172 256 122 251 64 256 0 252Z" fill="var(--land)"/>
+            <path d="M0 246 64 250 122 245 172 250 206 256 234 250 252 232 258 204 254 172 262 140 258 108 264 72 274 36" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 3" opacity=".7"/>
+            <g fill="var(--town)" aria-hidden="true"><circle cx="35" cy="246" r="1.5"/><circle cx="70" cy="246" r="1.5"/><circle cx="33" cy="226" r="1.5"/><circle cx="64" cy="222" r="1.5"/><circle cx="154" cy="236" r="1.5"/><circle cx="234" cy="232" r="1.5"/><circle cx="258" cy="179" r="1.5"/><circle cx="252" cy="140" r="1.5"/><circle cx="219" cy="60" r="1.5"/><circle cx="225" cy="17" r="1.5"/><circle cx="266" cy="44" r="1.5"/><circle cx="186" cy="128" r="1.5"/><circle cx="209" cy="144" r="1.5"/><circle cx="146" cy="199" r="1.5"/><circle cx="197" cy="195" r="1.5"/><circle cx="103" cy="132" r="1.5"/><circle cx="156" cy="52" r="1.5"/><circle cx="168" cy="21" r="1.5"/><circle cx="55" cy="107" r="1.5"/><circle cx="59" cy="146" r="1.5"/><circle cx="98" cy="56" r="1.5"/><circle cx="220" cy="193" r="1.5"/><circle cx="164" cy="171" r="1.5"/></g>
+            <g font-family="IBM Plex Sans" font-size="9.5" font-weight="600">
+              <!-- coastal cities -->
+              <circle cx="129" cy="238" r="5" fill="var(--mid)"/><text x="129" y="228" text-anchor="middle" fill="var(--ink)">Chernogorsk</text>
+              <circle cx="201" cy="243" r="5" fill="var(--mid)"/><text x="201" y="233" text-anchor="middle" fill="var(--ink)">Elektro</text>
+              <circle cx="252" cy="113" r="5" fill="var(--mid)"/><text x="244" y="116" text-anchor="end" fill="var(--ink)">Berezino</text>
+              <!-- inland -->
+              <circle cx="119" cy="150" r="4" fill="var(--low)"/><text x="126" y="153" fill="var(--ink)">Stary Sobor</text>
+              <circle cx="74" cy="126" r="4" fill="var(--low)"/><text x="66" y="129" text-anchor="end" fill="var(--ink)">Vybor</text>
+              <circle cx="53" cy="199" r="4" fill="var(--low)"/><text x="60" y="210" fill="var(--ink)">Zelenogorsk</text>
+              <!-- landmarks -->
+              <path d="M72 176 78 187H66Z" fill="var(--ink)"/><text x="82" y="186" fill="var(--muted)">Green Mtn tower</text>
+              <path d="M135 71 141 82H129Z" fill="var(--ink)"/><text x="145" y="81" fill="var(--muted)">Devil's Castle</text>
+              <!-- military -->
+              <rect x="80" y="96" width="22" height="5" rx="1" fill="var(--high)" transform="rotate(-20 91 98)"/><text x="104" y="96" fill="var(--high)">NWAF</text>
+              <rect x="224" y="53" width="20" height="5" rx="1" fill="var(--high)" transform="rotate(-10 234 55)"/><text x="234" y="47" text-anchor="middle" fill="var(--high)">NEAF</text>
+              <circle cx="31" cy="27" r="5" fill="var(--high)"/><text x="40" y="30" fill="var(--high)">Tisy</text>
+              <rect x="76" y="238" width="18" height="5" rx="1" fill="var(--high)"/><text x="85" y="232" text-anchor="middle" fill="var(--high)">Balota</text>
+            </g>
+            <g font-family="Barlow Condensed" font-weight="700" font-size="13">
+              <path d="M280 268v-16" stroke="var(--ink)" stroke-width="2"/><path d="m275 257 5-7 5 7" fill="var(--ink)"/>
+              <text x="280" y="284" text-anchor="middle" fill="var(--ink)">N</text>
+              <path d="M14 282h97.5" stroke="var(--ink)" stroke-width="2"/><path d="M14 278v8M111.5 278v8" stroke="var(--ink)" stroke-width="2"/>
+              <text x="62" y="277" text-anchor="middle" fill="var(--ink)">5 km</text>
+            </g>
+          </svg>
+        </div>
+        <p class="mapnote">Approximate positions. Dashed line: railway.</p>
+        <div class="legend"><span><i class="dot"></i>Quieter</span><span><i class="dot mid"></i>Busy</span><span><i class="dot high"></i>Military</span></div>
+        <div class="rows">
+          <div class="row"><b>Feel</b><p>Classic. Clear landmarks, coastal grind into quiet farmland.</p></div>
+          <div class="row"><b>Go</b><p>Inland villages, farms, Stary Sobor, Vybor.</p></div>
+          <div class="row"><b>Careful</b><p>Coastal cities draw fresh spawns and bandits.</p></div>
+          <div class="row"><b>Later</b><p>NWAF, Tisy, NEAF, Balota. Best gear, most danger.</p></div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-lv" role="tabpanel" aria-labelledby="tab-lv" hidden>
+        <div class="stats">
+          <div class="stat"><b>163 km²</b><span>Dense forest</span></div>
+          <div class="stat"><b>None</b><span>No coastline</span></div>
+          <div class="stat"><b>93</b><span>Wolf territories</span></div>
+        </div>
+        <div class="mapbox">
+          <svg viewBox="0 0 300 220" role="img" aria-label="Schematic of Livonia: river spawns across the north, forest and towns in the middle, harsh military south, Dambog bunker in the southwest corner">
+            <defs>
+              <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <path d="M0 0v8" stroke="var(--high)" stroke-width="1.5" opacity=".28"/>
+              </pattern>
+            </defs>
+            <rect width="300" height="220" fill="var(--land)"/>
+            <rect y="140" width="300" height="80" fill="url(#hatch)"/>
+            <path d="M0 42C40 30 70 60 110 48S180 22 220 40 280 52 300 36" fill="none" stroke="var(--sea)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M150 44C146 70 160 90 150 120" fill="none" stroke="var(--sea)" stroke-width="4" stroke-linecap="round"/>
+            <g font-family="IBM Plex Sans" font-size="10" font-weight="600">
+              <circle cx="40" cy="38" r="4" fill="var(--mid)"/><circle cx="110" cy="50" r="4" fill="var(--mid)"/><circle cx="220" cy="42" r="4" fill="var(--mid)"/><circle cx="280" cy="46" r="4" fill="var(--mid)"/>
+              <text x="150" y="20" text-anchor="middle" fill="var(--ink)">River spawns · picked clean fast</text>
+              <text x="150" y="98" text-anchor="end" dx="-12" fill="var(--ink)">Forest · towns · hunting</text>
+              <text x="150" y="168" text-anchor="middle" fill="var(--high)">Harsh south · military · bears</text>
+              <text x="150" y="182" text-anchor="middle" fill="var(--muted)">fewer water sources</text>
+              <rect x="14" y="196" width="10" height="10" rx="2" fill="var(--high)"/>
+              <text x="30" y="205" fill="var(--high)">Dambog bunker</text>
+            </g>
+            <g font-family="Barlow Condensed" font-weight="700" font-size="13">
+              <path d="M280 206v-16" stroke="var(--ink)" stroke-width="2"/><path d="m275 195 5-7 5 7" fill="var(--ink)"/>
+              <text x="266" y="205" text-anchor="middle" fill="var(--ink)">N</text>
+            </g>
+          </svg>
+        </div>
+        <p class="mapnote">Zones, not exact positions.</p>
+        <div class="rows">
+          <div class="row"><b>Feel</b><p>Wilderness. Rain, few landmarks, hunting over house-looting.</p></div>
+          <div class="row"><b>Navigate</b><p>Follow rivers and roads. Get a compass early.</p></div>
+          <div class="row"><b>Food</b><p>Deer are common. Knife + fire solves hunger.</p></div>
+          <div class="row"><b>Wildlife</b><p>Fewer wolves than Chernarus. Plenty of bears.</p></div>
+          <div class="row"><b>Explore</b><p>Branzów Castle near Topolin, the map's only castle.</p></div>
+          <div class="row"><b>Later</b><p>Lukow Airfield. Dambog bunker: keycards + head torch.</p></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- LOOT -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-house"/></svg></span><h2>Loot by place</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div class="legend"><span><i class="dot"></i>Low risk</span><span><i class="dot mid"></i>Medium</span><span><i class="dot high"></i>High</span></div>
+      <div>
+        <div class="risk"><i class="dot"></i><p><b>Houses</b> · food, clothes, bags, matches, maps</p></div>
+        <div class="risk"><i class="dot"></i><p><b>Barns &amp; sheds</b> · hatchet, shovel, pliers, rope, burlap, seeds</p></div>
+        <div class="risk"><i class="dot"></i><p><b>Nature</b> · fruit trees, fish, deer, sticks, stones</p></div>
+        <div class="risk"><i class="dot"></i><p><b>Hunting stands</b> · hunting rifles, ammo, warm outdoor gear</p></div>
+        <div class="risk"><i class="dot mid"></i><p><b>Shops</b> · canned food, drinks</p></div>
+        <div class="risk"><i class="dot mid"></i><p><b>Fire stations</b> · fire axe, firefighter gear</p></div>
+        <div class="risk"><i class="dot mid"></i><p><b>Police</b> · pistols, vests</p></div>
+        <div class="risk"><i class="dot mid"></i><p><b>Clinics &amp; hospitals</b> · medicine, NBC suit parts</p></div>
+        <div class="risk"><i class="dot mid"></i><p><b>Industrial &amp; lumber</b> · nails, planks, tools</p></div>
+        <div class="risk"><i class="dot high"></i><p><b>Military</b> · top weapons, armor, helmets</p></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- CRAFTING & ACTIONS -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-flame"/></svg></span><h2>Crafting &amp; actions</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <h3>Recipes</h3>
+      <div class="recipes">
+        <div class="rec"><span class="chip">Clothing</span><i>+</i><span class="chip">Knife</span><i>=</i><span class="chip out">Rags</span></div>
+        <div class="rec"><span class="chip">Small stone</span><i>+</i><span class="chip">Small stone</span><i>=</i><span class="chip out">Stone knife</span></div>
+        <div class="rec"><span class="chip">6 rags</span><i>+</i><span class="chip">6 rags</span><i>=</i><span class="chip out">Rope</span></div>
+        <div class="rec"><span class="chip">Long stick</span><i>+</i><span class="chip">Knife</span><i>=</i><span class="chip out">Sharpened stick</span></div>
+        <div class="rec"><span class="chip">Short stick</span><i>+</i><span class="chip">Bark</span><i>=</i><span class="chip out">Hand drill</span></div>
+        <div class="rec"><span class="chip">Rags / bark / paper</span><i>+</i><span class="chip">Stick</span><i>=</i><span class="chip out">Fireplace</span></div>
+        <div class="rec"><span class="chip">Fireplace</span><i>+</i><span class="chip">8 stones</span><i>=</i><span class="chip out">Stone ring</span></div>
+        <div class="rec"><span class="chip">Fireplace</span><i>+</i><span class="chip">16 stones</span><i>=</i><span class="chip out">Stone oven</span></div>
+        <div class="rec"><span class="chip">Long stick</span><i>+</i><span class="chip">2 short sticks</span><i>=</i><span class="chip out">Cooking stand</span></div>
+        <div class="rec"><span class="chip">Stick</span><i>+</i><span class="chip">Rags</span><i>=</i><span class="chip out">Torch</span></div>
+        <div class="rec"><span class="chip">2 short sticks</span><i>+</i><span class="chip">4 rags</span><i>=</i><span class="chip out">Splint</span></div>
+        <div class="rec"><span class="chip">Burlap sack</span><i>+</i><span class="chip">Rope</span><i>=</i><span class="chip out">Courier bag</span></div>
+        <div class="rec"><span class="chip">Courier bag</span><i>+</i><span class="chip">3 sticks</span><i>=</i><span class="chip out">Improvised backpack</span></div>
+        <div class="rec"><span class="chip">Stone knife</span><i>+</i><span class="chip">Long stick</span><i>=</i><span class="chip out">Spear</span></div>
+      </div>
+      <p class="muted" style="margin:0;font-size:13px">Full list in game: Help menu, Crafting.</p>
+
+      <h3>Actions</h3>
+      <div class="acts">
+        <div class="act">
+          <b>Start a fire</b>
+          <div class="flow">Tinder + stick <span class="arr">→</span> place fireplace <span class="arr">→</span> add sticks or firewood <span class="arr">→</span> light it</div>
+          <p>Light with matches, a hand drill or a flare. Hand drills can break on a failed try, so carry a spare. Build out of the rain. Fires glow at night, so build behind walls.</p>
+        </div>
+        <div class="act">
+          <b>Cook</b>
+          <div class="flow">Meat on sharpened stick <span class="arr">or</span> pot on stand <span class="arr">→</span> over fire</div>
+          <p>Cook until it's no longer raw, and pull it before it burns. Raw or rotten food makes you sick.</p>
+        </div>
+        <div class="act">
+          <b>Safe water</b>
+          <div class="flow">Well pump <span class="arr">=</span> safe · Pond <span class="arr">→</span> boil in pot or purification tablet</div>
+        </div>
+        <div class="act">
+          <b>Hunt &amp; gut</b>
+          <div class="flow">Kill <span class="arr">→</span> gut with knife <span class="arr">→</span> meat, fat, bones, pelt, guts</div>
+          <p>Wash your hands or wear gloves before eating.</p>
+        </div>
+        <div class="act">
+          <b>Load &amp; fire a gun</b>
+          <div class="flow">Ammo onto magazine <span class="arr">→</span> magazine onto gun <span class="arr">→</span> aim <span class="arr">→</span> fire</div>
+          <p>Ammo must match the caliber. Every shot carries far and pulls in infected and players.</p>
+        </div>
+        <div class="act">
+          <b>Bandage</b>
+          <div class="flow">Rags or bandage <span class="arr">→</span> stand still until it finishes</div>
+          <p>Disinfect rags first to avoid infection.</p>
+        </div>
+        <div class="act">
+          <b>Broken leg</b>
+          <div class="flow">Splint <span class="arr">→</span> walk, don't sprint</div>
+          <p>Crawl or move carefully until you can make one.</p>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- MEDICAL -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-med"/></svg></span><h2>Body &amp; medicine</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <p class="callout">Status arrows show the trend. Eat and drink steadily: stuffing yourself makes you vomit.</p>
+      <table>
+        <thead><tr><th>Problem</th><th>Cause</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Cholera</td><td>Pond water</td><td>Tetracycline</td></tr>
+          <tr><td>Salmonella</td><td>Bloody hands, raw meat</td><td>Charcoal tabs</td></tr>
+          <tr><td>Food poisoning</td><td>Rotten food</td><td>Charcoal tabs</td></tr>
+          <tr><td>Wound infection</td><td>Dirty rags</td><td>Disinfect, tetracycline</td></tr>
+          <tr><td>Cold</td><td>Wet and cold</td><td>Warmth, tetracycline</td></tr>
+          <tr><td>Bleeding</td><td>Hits, infected</td><td>Bandage now</td></tr>
+          <tr><td>Broken leg</td><td>Falls, hits</td><td>Splint</td></tr>
+        </tbody>
+      </table>
+      <p class="muted" style="margin:0;font-size:13px">Vitamins help you fight off illness.</p>
+    </div>
+  </details>
+
+  <!-- THREATS -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-warn"/></svg></span><h2>Threats</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div class="rows">
+        <div class="row"><b>Players</b><p>Assume hostile. Keep distance. A downed player may only be unconscious, so make sure.</p></div>
+        <div class="row"><b>Infected</b><p>Crouch-walk through towns. Aim for the head. Fight in doorways.</p></div>
+        <div class="row"><b>Wolves</b><p>Packs, mostly inland and north. A howl means get indoors.</p></div>
+        <div class="row"><b>Bears</b><p>Two hits can drop you. Back away.</p></div>
+        <div class="row"><b>Toxic zones</b><p>Yellow fog or hazard signs: turn back without a full NBC suit.</p></div>
+        <div class="row"><b>Night</b><p>Pitch black on official servers. Your light gives you away.</p></div>
+        <div class="row"><b>Rain</b><p>Wet clothes freeze you. Raincoat, fire, shelter.</p></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- SAFEHOUSE -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-key"/></svg></span><h2>Safehouse</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div class="rows">
+        <div class="row"><b>Where</b><p>Lone house or hamlet off main roads. Near a well, fruit trees and a pond.</p></div>
+        <div class="row"><b>Store</b><p>Tent, barrel or buried stash (shovel). Floor loot despawns. Revisit containers regularly.</p></div>
+        <div class="row"><b>Lock</b><p>Code lock, all maps since 1.30. Runs on a 9V battery and opens when it dies.</p></div>
+        <div class="row"><b>Build</b><p>Fence kits: nails, planks, hatchet, shovel.</p></div>
+        <div class="row"><b>Live</b><p>Garden (shovel + seeds), fishing, hunting, stone oven cooking.</p></div>
+        <div class="row"><b>Server</b><p>PvE or low-population community servers keep bases standing.</p></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- HIGH RISK -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-bolt"/></svg></span><h2>High-risk PvE</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div>
+        <div class="risk"><i class="dot high"></i><p><b>Heli crashes</b> · follow the smoke. 10–15 high-tier items, military infected, no gas.</p></div>
+        <div class="risk"><i class="dot high"></i><p><b>Toxic zones</b> · static zones hold top loot. Dynamic zones: about 1:25 from artillery to death. 5-piece NBC suit, mask, filters.</p></div>
+        <div class="risk"><i class="dot high"></i><p><b>Convoys</b> · AI soldiers guard the wrecks.</p></div>
+        <div class="risk"><i class="dot high"></i><p><b>Military bases</b> · armored infected. One shot draws a crowd.</p></div>
+        <div class="risk"><i class="dot high"></i><p><b>Bunkers</b> · Dambog (Livonia), Sakhal shipwreck containers (key color must match), Nasdara underground.</p></div>
+      </div>
+      <p class="callout">Stash the good gear first. Raid light, bring loot home.</p>
+    </div>
+  </details>
+
+  <!-- XBOX -->
+  <details>
+    <summary><span class="ic"><svg><use href="#i-pad"/></svg></span><h2>Xbox setup</h2><svg class="chev"><use href="#i-chev"/></svg></summary>
+    <div class="body">
+      <div class="rows">
+        <div class="row"><b>Headset</b><p>Sound finds danger first.</p></div>
+        <div class="row"><b>Inventory</b><p>View button. Put bandages and your weapon on the quickbar.</p></div>
+        <div class="row"><b>Voice</b><p>Hold D-pad left. Strangers' proximity chat can get crude.</p></div>
+        <div class="row"><b>Servers</b><p>Filter for daytime, low population or PvE.</p></div>
+        <div class="row"><b>Character</b><p>Shared across official servers. Separate on each community server.</p></div>
+        <div class="row"><b>Log out</b><p>Tucked in a building corner, never in the open.</p></div>
+        <div class="row"><b>Phone</b><p>iZurvive app as your map until you find one.</p></div>
+      </div>
+    </div>
+  </details>
+
+  <footer>
+    <span>NATIVE SERIES X|S SINCE 1.29 · 1.30 WIPED ALL SERVERS OCT 15 2026</span>
+    <a href="../index.html">MADE WITH AI BY SLAGS</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var all = Array.prototype.slice.call(document.querySelectorAll('details'));
+  var btn = document.getElementById('toggleAll');
+  function sync() {
+    var allOpen = all.every(function (d) { return d.open; });
+    btn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  }
+  btn.addEventListener('click', function () {
+    var allOpen = all.every(function (d) { return d.open; });
+    all.forEach(function (d) { d.open = !allOpen; });
+    sync();
+  });
+  all.forEach(function (d) { d.addEventListener('toggle', sync); });
+  sync();
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (o) {
+        var on = o === t;
+        o.setAttribute('aria-selected', on ? 'true' : 'false');
+        document.getElementById(o.getAttribute('aria-controls')).hidden = !on;
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
