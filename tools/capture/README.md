@@ -18,6 +18,19 @@ real clips now; the placeholder stays as the fallback for any new card.
 
 Target: 5:2 (1200×480), 30 fps, about 5 s, H.264 around 1.6 Mbps (≈1 MB).
 
+**After (re)shooting a clip, run `tools/capture/derive.sh <slug>`.** It makes
+the lighter versions the page actually serves first: `<slug>.jpg` (1200 px
+poster), `<slug>-sm.jpg` (720 px poster) and `<slug>-sm.mp4` (600×240,
+~500 kbps, same frames so the loop stays seamless). The poster moment per card
+is set in the script; pick a frame that reads on its own, since data-saver and
+2G visitors only ever see the still.
+
+How the homepage picks: a poster first (the browser chooses its size from
+`srcset`), then the clip once the card is on screen. It uses the `-sm` clip on 3G,
+or whenever the card × screen density (capped at 2) is 720 px or less. Data saver,
+2G and reduced motion stay on the poster. Once a poster or clip covers a card, its
+SVG vignette is taken out of rendering.
+
 Nothing to install: it uses your Chrome, Node 22+ and macOS's own AVFoundation
 (through `swift`, which comes with Xcode or the Command Line Tools).
 
@@ -136,5 +149,6 @@ tools/capture/cut.sh /tmp/mgp-take 95 300 previews/meridian-gp.mp4 1600000 20
 ```
 
 - `cut.sh` → `encode.swift`: frames to a looping H.264 mp4 with an end-to-start crossfade.
+- `derive.sh` → `derive.swift`: posters and phone-size clips from a finished clip.
 - `montage.swift`: contact sheet of stills.
 - `testclip.swift`: regenerates `previews/placeholder.mp4`.
