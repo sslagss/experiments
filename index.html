@@ -13,7 +13,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:ital,wght@0,300;0,500;0,700;0,900;1,300&display=swap" rel="stylesheet">
     <style>
         /* Styled to match scottslags.com: white page, navy ink, Anton display caps,
            light DM Sans body, square corners, hairline borders, deep-navy footer band */
@@ -99,20 +99,21 @@
         h1 {
             font-family: var(--display);
             font-weight: 400;
-            font-size: clamp(3.5rem, 13vw, 6rem);
-            line-height: 0.9;
+            font-size: clamp(2.5rem, 15.5vw, 8.5rem);
+            line-height: 0.88;
             letter-spacing: -0.02rem;
             text-transform: uppercase;
             margin-bottom: 1.5rem;
         }
 
         .bio {
-            font-size: 1.125rem;
+            font-size: clamp(1.125rem, 2.4vw, 1.375rem);
             font-weight: 300;
-            line-height: 1.5;
+            line-height: 1.45;
+            letter-spacing: 0;
             color: var(--text);
-            max-width: 40ch;
-            margin-bottom: 1.5rem;
+            max-width: 36ch;
+            margin-bottom: 1.75rem;
         }
 
         .socials {
@@ -125,16 +126,31 @@
 
         .socials a {
             color: var(--ink);
-            font-size: 0.9375rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
             text-decoration: none;
             padding-bottom: 2px;
             border-bottom: 1px solid var(--line);
             transition: border-color 0.2s ease;
         }
 
+        .socials a::after {
+            content: "\2197";
+            margin-left: 0.2em;
+            font-weight: 300;
+            color: var(--caption);
+            display: inline-block;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
         .socials a:hover {
             border-bottom-color: var(--hover);
+        }
+
+        .socials a:hover::after {
+            color: var(--ink);
+            transform: translate(2px, -2px);
         }
 
         .theme-toggle {
@@ -143,8 +159,9 @@
             align-items: center;
             gap: 0.4rem;
             padding: 0.4rem 0.7rem;
-            font: 500 0.8125rem/1 var(--body);
-            letter-spacing: 0.01em;
+            font: 700 0.6875rem/1 var(--body);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
             color: var(--ink);
             background: transparent;
             border: 1px solid var(--line);
@@ -182,6 +199,7 @@
         }
 
         nav {
+            counter-reset: experiment;
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -211,8 +229,13 @@
             }
 
             .card-label {
-                padding: 1.5rem 1.5rem 1.625rem;
-                font-size: 1.25rem;
+                padding: 1.5rem 3.5rem 1.75rem 1.5rem;
+                font-size: 1.5rem;
+            }
+
+            .card-label::after {
+                right: 1.5rem;
+                top: 1.5rem;
             }
         }
 
@@ -257,23 +280,59 @@
             display: block;
         }
 
+        /* card titles: black-weight caps with a /01 index and an arrow, like the site's skill cards */
         .card-label {
-            padding: 1.25rem;
-            font-size: 1.125rem;
-            font-weight: 700;
-            line-height: 1.5;
-            letter-spacing: -0.01em;
+            position: relative;
+            counter-increment: experiment;
+            padding: 1.25rem 3rem 1.5rem 1.25rem;
+            font-size: 1.25rem;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: 0.005em;
+            text-transform: uppercase;
             border-top: 1px solid var(--line);
             transition: background-color 0.2s ease;
         }
 
-        .card-sub {
+        .card-label::before {
+            content: "/" counter(experiment, decimal-leading-zero);
             display: block;
-            margin-top: 0.125rem;
-            font-size: 0.8125rem;
+            margin-bottom: 0.625rem;
+            font-size: 0.75rem;
             font-weight: 300;
+            line-height: 1.5;
             letter-spacing: 0.01em;
             color: var(--caption);
+        }
+
+        .card-label::after {
+            content: "\2192";
+            position: absolute;
+            right: 1.25rem;
+            top: 1.25rem;
+            font-size: 1.125rem;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--caption);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .card:hover .card-label::after,
+        .card:focus-visible .card-label::after {
+            color: var(--ink);
+            transform: translateX(4px);
+        }
+
+        .card-sub {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.9375rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.45;
+            letter-spacing: 0.01em;
+            text-transform: none;
+            color: var(--text);
         }
 
         /* ---- Meridian GP vignette ---- */
@@ -461,21 +520,24 @@
 
         footer.author {
             margin-top: 4.5rem;
-            padding: 2.5rem 0 2.75rem;
-            text-align: center;
+            padding: 3rem 0 3.5rem;
+            text-align: left;
             background-color: var(--footer);
-            border-top: 1px solid var(--footer-line);
-            /* bleed the navy band to the viewport edges, like the site footer */
-            box-shadow: 0 0 0 100vmax var(--footer);
-            clip-path: inset(0 -100vmax);
+            /* bleed the navy band (and its top hairline) to the viewport edges */
+            box-shadow: 0 0 0 100vmax var(--footer), 0 -1px 0 100vmax var(--footer-line);
+            clip-path: inset(-1px -100vmax 0);
         }
 
+        /* big subtle Anton sign-off, like the site's "Would you like to know more?" */
         footer.author a {
             color: var(--footer-link);
-            font-size: 0.9375rem;
-            font-weight: 500;
+            font-family: var(--display);
+            font-size: clamp(2.25rem, 8vw, 4.5rem);
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
             text-decoration: none;
-            letter-spacing: 0.01em;
             transition: color 0.2s ease;
         }
 
