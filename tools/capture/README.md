@@ -11,7 +11,7 @@ so adding a file is all it takes to replace a placeholder.
 | Vector Wars | `vector-wars.mp4` (done: level 2 mini-boss kill) |
 | Track Companion | `track-companion.mp4` |
 | Type Lab | `typelab.mp4` |
-| Solscape | `solscape.mp4` |
+| Solscape | `solscape.mp4` (done: fly to Saturn, UI hidden) |
 | Scoville | `scoville.mp4` |
 | Meridian GP | `meridian-gp.mp4` |
 
@@ -25,9 +25,14 @@ Nothing to install: it uses your Chrome, Node 22+ and macOS's own AVFoundation
 Screen-recording a WebGL page in headless Chrome stutters, so instead the page
 is stepped one frame (1/30 s) at a time and screenshotted after each step. The
 clip comes out perfectly smooth however slow the rendering is. This needs a way
-to advance the prototype by hand. Vector Wars has one (`?debug` →
-`window.vectorWars.step()`); for other prototypes, write a scenario whose
-`step` does the equivalent (or add a small step hook to the prototype).
+to advance the prototype by hand:
+
+- **A step hook**, if the prototype has one. Vector Wars: `?debug` →
+  `window.vectorWars.step()` (`vector-wars.mjs`).
+- **Virtual time**, for anything animated purely by `requestAnimationFrame`.
+  The scenario swaps in a fake rAF and runs the queued callbacks with the
+  clock advanced 1/30 s per step (`solscape.mjs`; copy its `init` for other
+  canvas prototypes). Timers and CSS transitions still run in real time.
 
 ## Walkthrough (Vector Wars)
 
@@ -75,6 +80,10 @@ to advance the prototype by hand. Vector Wars has one (`?debug` →
 
 - `cdp.mjs`: the driver (scenario in, stills or frames out).
 - `vector-wars.mjs`: the Vector Wars scenario. `LEVEL=n` env picks the level.
+- `solscape.mjs`: the Solscape scenario. `CUES` scripts fly-tos and toggles,
+  `HIDE_UI=1` drops the overlays. The homepage clip:
+  `HIDE_UI=1 CUES="1:saturn" node tools/capture/cdp.mjs tools/capture/solscape.mjs --mode take --from 0 --to 13 --out /tmp/sol-take`,
+  then `tools/capture/cut.sh /tmp/sol-take 40 290 previews/solscape.mp4 1600000 20`.
 - `cut.sh` → `encode.swift`: frames to a looping H.264 mp4 with an end-to-start crossfade.
 - `montage.swift`: contact sheet of stills.
 - `testclip.swift`: regenerates `previews/placeholder.mp4`.
