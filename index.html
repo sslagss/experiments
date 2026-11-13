@@ -304,6 +304,25 @@
             container-type: inline-size;
         }
 
+        /* preview capture: drop previews/<slug>.mp4 in to replace a card's placeholder clip.
+           Sits over the SVG vignette and fades in once it is actually playing. */
+        .vignette-video {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .vignette-video.ready {
+            opacity: 1;
+        }
+
         .vignette svg {
             position: absolute;
             inset: 0;
@@ -608,6 +627,7 @@
         <nav>
             <a href="dayz-field-card/index.html" class="card">
                 <div class="vignette vignette-dayz" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/dayz-field-card.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="dz-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
@@ -666,6 +686,7 @@
             </a>
             <a href="synthlab/index.html" class="card">
                 <div class="vignette vignette-synth" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/synthlab.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="syn-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
@@ -682,6 +703,7 @@
             </a>
             <a href="Vector%20Wars/index.html" class="card">
                 <div class="vignette vignette-vector" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/vector-wars.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="vw-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="b"></feGaussianBlur><feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
@@ -708,6 +730,7 @@
             </a>
             <a href="track-companion/index.html" class="card">
                 <div class="vignette vignette-track" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/track-companion.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <div class="tc-word">TRACK COMPANION</div>
                     <div class="tc-strip-wrap">
                         <div class="tc-now-line"></div>
@@ -739,6 +762,7 @@
             </a>
             <a href="typelab/typelab.html" class="card">
                 <div class="vignette vignette-typelab" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/typelab.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <linearGradient id="tl-text" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -760,6 +784,7 @@
             </a>
             <a href="solscape/index.html" class="card">
                 <div class="vignette vignette-solscape" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/solscape.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <radialGradient id="ss-earth" cx="36%" cy="30%" r="75%">
@@ -805,6 +830,7 @@
             </a>
             <a href="Scoville Index (Standalone).html" class="card">
                 <div class="vignette vignette-scoville" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/scoville.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <g>
                             <animateTransform attributeName="transform" type="rotate" values="-7 125 52;7 125 52;-7 125 52" dur="26s" repeatCount="indefinite"></animateTransform>
@@ -852,6 +878,7 @@
             </a>
             <a href="MGP-recap.html" class="card">
                 <div class="vignette vignette-mgp" aria-hidden="true">
+                    <video class="vignette-video" muted loop playsinline preload="none" tabindex="-1"><source src="previews/meridian-gp.mp4" type="video/mp4"><source src="previews/placeholder.mp4" type="video/mp4"></video>
                     <svg viewBox="0 0 240 100" preserveAspectRatio="xMidYMid meet">
                         <path id="mgp-track" d="M 70 12 L 170 12 A 38 38 0 0 1 170 88 L 70 88 A 38 38 0 0 1 70 12 Z" fill="none" stroke="rgba(232,230,225,0.28)" stroke-width="2"></path>
                         <rect x="116" y="9" width="4" height="6" fill="rgba(232,230,225,0.5)"></rect>
@@ -910,32 +937,52 @@
       (function () {
         var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+        function setVideoPlaying(vignette, playing) {
+          var video = vignette.querySelector('.vignette-video');
+          if (!video) return;
+          if (playing) {
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {}); // autoplay refused: the SVG stays visible
+          } else {
+            video.pause();
+          }
+        }
+
         function setSvgPlaying(vignette, playing) {
+          setVideoPlaying(vignette, playing);
           var svg = vignette.querySelector('svg');
           if (!svg || typeof svg.pauseAnimations !== 'function') return;
           if (playing) svg.unpauseAnimations(); else svg.pauseAnimations();
         }
+
+        document.querySelectorAll('.vignette-video').forEach(function (video) {
+          video.addEventListener('playing', function () { video.classList.add('ready'); });
+        });
 
         var vignettes = document.querySelectorAll('.vignette');
         vignettes.forEach(function (v) { setSvgPlaying(v, false); });
 
         if (reduceMotion) return; // leave everything paused/static
 
+        // remember on-screen state separately, so a page that loads in a background tab
+        // still starts the cards that are already in view once it becomes visible
+        function sync(v) {
+          var playing = v.inView === true && !document.hidden;
+          v.classList.toggle('animate', playing);
+          setSvgPlaying(v, playing);
+        }
+
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
-            var v = entry.target;
-            var playing = entry.isIntersecting && !document.hidden;
-            v.classList.toggle('animate', playing);
-            setSvgPlaying(v, playing);
+            entry.target.inView = entry.isIntersecting;
+            sync(entry.target);
           });
         }, { threshold: 0.2 });
         vignettes.forEach(function (v) { io.observe(v); });
 
         document.addEventListener('visibilitychange', function () {
           document.body.classList.toggle('page-hidden', document.hidden);
-          vignettes.forEach(function (v) {
-            setSvgPlaying(v, !document.hidden && v.classList.contains('animate'));
-          });
+          vignettes.forEach(sync);
         });
       })();
     </script>
