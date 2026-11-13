@@ -153,19 +153,20 @@
             transform: translate(2px, -2px);
         }
 
+        /* light/dark switch: pill outline holding a label and a track + knob (off = light) */
         .theme-toggle {
             margin-left: auto;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.7rem;
+            gap: 0.6rem;
+            padding: 0.3rem 0.3rem 0.3rem 0.85rem;
             font: 700 0.6875rem/1 var(--body);
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--ink);
             background: transparent;
             border: 1px solid var(--line);
-            border-radius: 0;
+            border-radius: 999px;
             cursor: pointer;
             transition: border-color 0.2s ease;
         }
@@ -174,20 +175,51 @@
             border-color: var(--hover);
         }
 
-        .theme-toggle svg {
-            width: 14px;
-            height: 14px;
+        .theme-switch {
+            position: relative;
             flex: none;
+            width: 34px;
+            height: 20px;
+            border-radius: 999px;
+            background: var(--line);
+            transition: background-color 0.2s ease;
         }
 
-        /* moon offers dark mode; sun offers light mode once dark is on */
-        .theme-toggle .icon-sun,
-        .theme-toggle[aria-pressed="true"] .icon-moon {
-            display: none;
+        .theme-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--surface);
+            color: var(--caption);
+            box-shadow: 0 1px 2px rgba(3, 13, 36, 0.25);
+            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
         }
 
-        .theme-toggle[aria-pressed="true"] .icon-sun {
-            display: block;
+        .theme-knob svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .theme-toggle[aria-checked="true"] .theme-switch {
+            background: var(--ink);
+        }
+
+        .theme-toggle[aria-checked="true"] .theme-knob {
+            transform: translateX(14px);
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .theme-switch,
+            .theme-knob {
+                transition: none;
+            }
         }
 
         .socials a:focus-visible,
@@ -568,10 +600,9 @@
             <a href="https://dribbble.com/scottslags">Dribbble</a>
             <a href="https://vimeo.com/user8062793">Vimeo</a>
             <a href="https://scottslags.com">Portfolio</a>
-            <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false">
-                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"></path></svg>
-                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+            <button type="button" class="theme-toggle" id="theme-toggle" role="switch" aria-checked="false">
                 <span class="theme-toggle-label">Dark mode</span>
+                <span class="theme-switch" aria-hidden="true"><span class="theme-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"></path></svg></span></span>
             </button>
         </div>
         <nav>
@@ -862,8 +893,7 @@
 
         function syncToggle() {
           var dark = currentTheme() === 'dark';
-          btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-          btn.querySelector('.theme-toggle-label').textContent = dark ? 'Light mode' : 'Dark mode';
+          btn.setAttribute('aria-checked', dark ? 'true' : 'false');
         }
 
         btn.addEventListener('click', function () {
