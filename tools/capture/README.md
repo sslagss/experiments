@@ -2,14 +2,15 @@
 
 Tools for recording the looping clips on the homepage cards. Each card plays
 `previews/<slug>.mp4` when it exists and `previews/placeholder.mp4` otherwise,
-so adding a file is all it takes to replace a placeholder.
+so adding a file is all it takes to replace a placeholder. All eight cards have
+real clips now; the placeholder stays as the fallback for any new card.
 
 | Card | File |
 |---|---|
-| DayZ Field Card | `dayz-field-card.mp4` |
-| Synthlab | `synthlab.mp4` |
+| DayZ Field Card | `dayz-field-card.mp4` (done: the card's original SVG vignette, rendered) |
+| Synthlab | `synthlab.mp4` (done: Build tab, New → Randomize → Mutate with phrases played) |
 | Vector Wars | `vector-wars.mp4` (done: level 2 mini-boss kill) |
-| Track Companion | `track-companion.mp4` |
+| Track Companion | `track-companion.mp4` (done: drive screen, Della Roggia → Lesmo 1 → Lesmo 2) |
 | Type Lab | `typelab.mp4` (done: Thermal sweep through EXPERIMENT, then it heals) |
 | Solscape | `solscape.mp4` (done: fly to Saturn, UI hidden) |
 | Scoville | `scoville.mp4` (done: Galaxy view, Orbits → Giants → Orbits) |
@@ -95,17 +96,33 @@ to advance the prototype by hand:
 - `page.mjs` + `virtual-time.mjs`: any rAF page. `PAGE`, `READY`, `CUES`
   (`"<s>:<js>;;<s>:<js>"`), `CSS`, `CLEAR_STORAGE=1`. See below for Scoville and MGP.
 
-### Scoville and Meridian GP (generic `page.mjs`)
+- `synthlab.mjs`: Synthlab's Build tab with scripted key phrases and
+  New / Randomize / Mutate (it fakes the pressed look, since scripted clicks
+  show no `:active`). Command in the file's header.
+- `svg-vignette.mjs`: renders one of the homepage's own SMIL vignettes
+  (`CARD=dayz`) frame by frame with `svg.setCurrentTime()`. Command in the file's header.
+
+### Scoville, Track Companion and Meridian GP (generic `page.mjs`)
 
 ```bash
-click() { echo "[...document.querySelectorAll('button')].find(b => b.textContent.trim() === '$1').click()"; }
+click() { echo "[...document.querySelectorAll('button')].find(b => b.textContent.trim().toLowerCase() === '$1'.toLowerCase()).click()"; }
 ```
+
+(Match case-insensitively: CSS often uppercases labels, e.g. Synthlab's "Build".)
 
 Scoville (the card links to the Index view; the clip is the Galaxy view it opens):
 
 ```bash
 PAGE="Scoville Galaxy (Standalone).html" READY="!!document.querySelector('canvas') && (window.__capWait = (window.__capWait || 0) + 1) > 30" CUES="0.2:$(click Orbits);;3:$(click Giants);;6:$(click Orbits)" node tools/capture/cdp.mjs tools/capture/page.mjs --mode take --from 0 --to 9 --out /tmp/scg-take
 tools/capture/cut.sh /tmp/scg-take 45 255 previews/scoville.mp4 1600000 20
+```
+
+Track Companion: the drive screen on the default 1:55.00 target, across two
+corner hand-overs (it re-renders instantly; there's no scroll animation):
+
+```bash
+CLEAR_STORAGE=1 PAGE="track-companion/index.html" READY="!!document.getElementById('start-btn') && (window.__capWait = (window.__capWait || 0) + 1) > 15" CUES="0.3:document.getElementById('start-btn').click()" node tools/capture/cdp.mjs tools/capture/page.mjs --mode take --from 44.5 --to 53.1 --out /tmp/tc-take
+tools/capture/cut.sh /tmp/tc-take 1345 1590 previews/track-companion.mp4 1600000 15
 ```
 
 Meridian GP. It remembers its camera in localStorage, so clear it and pick
