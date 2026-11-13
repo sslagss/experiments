@@ -2,7 +2,7 @@
 
 Tools for recording the looping clips on the homepage cards. Each card plays
 `previews/<slug>.mp4` when it exists and `previews/placeholder.mp4` otherwise,
-so adding a file is all it takes to replace a placeholder. All eight cards have
+so adding a file is all it takes to replace a placeholder. All the cards have
 real clips now; the placeholder stays as the fallback for any new card.
 
 | Card | File |
@@ -10,7 +10,6 @@ real clips now; the placeholder stays as the fallback for any new card.
 | DayZ Field Card | `dayz-field-card.mp4` (done: the card's original SVG vignette, rendered) |
 | Synthlab | `synthlab.mp4` (done: Build tab, New → Randomize → Mutate with phrases played) |
 | Vector Wars | `vector-wars.mp4` (done: level 2 mini-boss kill) |
-| Track Companion | `track-companion.mp4` (done: drive screen, Della Roggia → Lesmo 1 → Lesmo 2) |
 | Type Lab | `typelab.mp4` (done: Thermal sweep through EXPERIMENT, then it heals) |
 | Solscape | `solscape.mp4` (done: fly to Saturn, UI hidden) |
 | Scoville | `scoville.mp4` (done: Galaxy view, Orbits → Giants → Orbits) |
@@ -130,7 +129,8 @@ PAGE="Scoville Galaxy (Standalone).html" READY="!!document.querySelector('canvas
 tools/capture/cut.sh /tmp/scg-take 45 255 previews/scoville.mp4 1600000 20
 ```
 
-Track Companion: the drive screen on the default 1:55.00 target, across two
+Track Companion (its card was removed from the homepage on 2026-11-13; kept
+for reference): the drive screen on the default 1:55.00 target, across two
 corner hand-overs (it re-renders instantly; there's no scroll animation):
 
 ```bash
